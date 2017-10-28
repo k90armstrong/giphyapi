@@ -1,4 +1,25 @@
 .gif {
     width: 250px;
     display: inline-block;
+    margin: 5px;
+    border: solid;
+    border-width: 2px;
+    border-color: grey;
+    vertical-align: middle;
+    align-content: middle;
+    border-radius: 5px;
+}
+
+form {
+    margin-bottom: 10px;
+}
+
+img {
+    cursor: pointer;
+    display: block;
+    margin: auto;
+}
+
+.gifs {
+    padding-top: 0px;
 }
