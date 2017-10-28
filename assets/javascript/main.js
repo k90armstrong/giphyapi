@@ -9,18 +9,23 @@ $(document).ready(function () {
     function createButton(title) {
         var $a = $('<a>').addClass('gif-button button is-link is-outlined');
         $a.text(title);
+        $a.attr('data-clicks', '0');
         return $a;
     }
 
     function buttonClickHandler(event) {
+        $('.gif-button').addClass('is-outlined');
+        $(this).removeClass('is-outlined')
         var title = $(this).text();
+        var clicks = parseInt($(this).attr('data-clicks'));
         // use ajax to get the gifs from giphy
         var apiKey = "ajr8bxOsbIB09O6mzx88S9u88o18f7et";
         var queryURL = "https://api.giphy.com/v1/gifs/search";
         queryURL += '?' + $.param({
             api_key: apiKey,
             q: title,
-            limit: 10
+            limit: 20,
+            offset: clicks * 20
         });
         $.ajax({
             url: queryURL,
@@ -32,14 +37,19 @@ $(document).ready(function () {
                 renderPageGifs(gifs);
             }
         });
+        clicks++;
+        $(this).attr('data-clicks', clicks);
+
     }
 
     function renderPageGifs(arrayOfGifs) {
         var $gifContainer = $('.gif-container');
         $gifContainer.empty();
         for (var i = 0; i < arrayOfGifs.length; i++) {
-            var $gif = makeGifElement(arrayOfGifs[i]);
-            $gifContainer.append($gif);
+            if (arrayOfGifs[i].rating.toLowerCase() !== 'r' && arrayOfGifs[i].rating.toLowerCase() !== 'pg-13') {
+                var $gif = makeGifElement(arrayOfGifs[i]);
+                $gifContainer.append($gif);
+            }
         }
     }
 
@@ -71,7 +81,8 @@ $(document).ready(function () {
     }
 
 
-    function addButtonClickHandler() {
+    function addButtonClickHandler(event) {
+        event.preventDefault();
         var newButtonText = $('input').val();
         $('input').val('');
         var $btn = createButton(newButtonText);
